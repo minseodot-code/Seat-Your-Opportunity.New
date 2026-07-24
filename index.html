@@ -1,0 +1,1886 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Seat Your Opportunity | 카페 자리로 알아보는 나의 커리어 유형</title>
+  
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="Seat Your Opportunity - 카페 자리 선택으로 알아보는 나만의 커리어 지정석 영수증 & 잡페어 추천 미션" />
+  <meta property="og:title" content="Seat Your Opportunity - 카페 자리 커리어 성향 영수증" />
+  <meta property="og:description" content="7개의 질문에 답하고 나의 커리어 지정석 영수증과 대표 강점, 현직자 추천 질문까지 확인해보세요!" />
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- html2canvas CDN for DOM to PNG Image Download -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  
+  <!-- Base64 Charm Image Module -->
+  <script src="charm_base64.js"></script>
+
+  <!-- Google Fonts: Noto Sans KR & Roboto Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+  
+  <style>
+    body {
+      font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: #FAF7F2;
+      color: #1E3A2B;
+    }
+    .font-mono {
+      font-family: 'Roboto Mono', monospace;
+    }
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #FAF7F2;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #007042;
+      border-radius: 4px;
+    }
+  </style>
+
+  <!-- React 18 & ReactDOM 18 CDN -->
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+  
+  <!-- Babel Standalone -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body class="min-h-screen text-[#1E3A2B]">
+  <div id="root"></div>
+
+  <!-- React Application Script -->
+  <script type="text/babel">
+    const { useState, useEffect, useRef } = React;
+
+    const RESULT_TYPES = {
+      VISION: {
+        id: 'VISION',
+        seatName: '창가 자리',
+        seatCode: 'WINDOW',
+        seatIcon: '🪟',
+        typeBadge: '창가 자리 – 비전 탐색형',
+        title: '새로운 가능성의 창가 자리',
+        subTitle: '미래 트렌드 & 창의적 비전 탐색가',
+        stampBadge: '[ APPROVED / VISIONARY ]',
+        stampColor: 'text-[#007042] border-[#007042] bg-emerald-50',
+        tags: ['#호기심', '#창의성', '#도전정신', '#관찰력'],
+        strengths: '새로운 환경 및 경험에 대한 호기심이 크고, 남들과 다른 독창적인 아이디어를 구상하는 능력이 뛰어납니다.',
+        preferredEnvironment: [
+          '자율성이 보장된 환경',
+          '새로운 도전이 장려되는 문화',
+          '미래 비전이 밝게 열린 조직'
+        ],
+        growth: '아이디어를 구체적인 실행 계획과 일정으로 다듬어보세요.',
+        jobFairMission: '평소 관심 없던 부스 1곳 방문해 새로운 직무 탐색하기',
+        seniorQuestionCard: {
+          question: '새 아이디어를 실제 업무에 반영할 때 가장 중요한 기준은?',
+          tip: '기업의 미래 성장 전략과 창의적 비전 결합 가능성을 확인하세요.'
+        }
+      },
+      FOCUS: {
+        id: 'FOCUS',
+        seatName: '구석 자리',
+        seatCode: 'CORNER',
+        seatIcon: '📚',
+        typeBadge: '구석 자리 – 집중 몰입형',
+        title: '완성도를 높이는 구석 자리',
+        subTitle: '집중 몰입 & 디테일 분석 마스터',
+        stampBadge: '[ APPROVED / DEEP THINKER ]',
+        stampColor: 'text-emerald-900 border-emerald-800 bg-emerald-100/60',
+        tags: ['#집중력', '#분석력', '#꼼꼼함', '#높은완성도'],
+        strengths: '조용한 공간에서 혼자 깊이 몰입하는 능력이 뛰어나며, 데이터를 정교하고 분석적으로 파악하여 완성도를 높입니다.',
+        preferredEnvironment: [
+          '역할과 목표가 명확한 환경',
+          '몰입 시간이 보장되는 환경',
+          '체계적인 데이터가 있는 문화'
+        ],
+        growth: '완벽해지기 전 중간 진행 상황을 동료와 공유해보세요.',
+        jobFairMission: '관심 직무 현직자에게 실제 하루 실무 일과 물어보기',
+        seniorQuestionCard: {
+          question: '업무의 정확성을 높이기 위해 평소 어떻게 점검하시나요?',
+          tip: '실무자의 문제 해결 프로세스와 직무 몰입 노하우를 배울 수 있습니다.'
+        }
+      },
+      ACTION: {
+        id: 'ACTION',
+        seatName: '콘센트 자리',
+        seatCode: 'OUTLET',
+        seatIcon: '⚡',
+        typeBadge: '콘센트 자리 – 준비 실행형',
+        title: '스피드 실행의 콘센트 자리',
+        subTitle: '즉각적 실행 & 성과 추진가',
+        stampBadge: '[ APPROVED / EXECUTOR ]',
+        stampColor: 'text-emerald-950 border-[#007042] bg-teal-50',
+        tags: ['#실행력', '#준비성', '#일정관리', '#책임감'],
+        strengths: '업무와 작업에 필요한 현실적인 조건과 도구를 신속하게 파악하고, 강한 책임감과 스피드로 계획을 차근차근 실행합니다.',
+        preferredEnvironment: [
+          '빠른 의사결정의 주도적 환경',
+          '장비와 콘센트가 완비된 공간',
+          '성과가 명확히 보이는 조직'
+        ],
+        growth: '모든 조건이 완벽하지 않아도 작은 단계부터 즉시 실행해보세요.',
+        jobFairMission: '이번 달 안에 실천할 직무 준비 행동 1가지 결정하기',
+        seniorQuestionCard: {
+          question: '이 직무 준비를 위해 가장 먼저 갖춰야 할 역량은 무엇인가요?',
+          tip: '우선순위에 맞춘 실질적 준비 가이드를 현직자로부터 얻을 수 있습니다.'
+        }
+      },
+      CONNECT: {
+        id: 'CONNECT',
+        seatName: '큰 테이블 자리',
+        seatCode: 'BIG_TABLE',
+        seatIcon: '🤝',
+        typeBadge: '큰 테이블 자리 – 소통 연결형',
+        title: '기회를 연결하는 큰 테이블 자리',
+        subTitle: '소통 시너지 & 허브 커뮤니케이터',
+        stampBadge: '[ APPROVED / CONNECTOR ]',
+        stampColor: 'text-[#007042] border-[#007042] bg-[#E0F2F1]',
+        tags: ['#의사소통', '#친화력', '#협업', '#공감능력'],
+        strengths: '사람들과의 대화와 협업에서 시너지를 얻으며, 팀원 간의 소통을 원활하게 이어주고 따뜻한 분위기를 형성합니다.',
+        preferredEnvironment: [
+          '자유로운 소통이 이뤄지는 환경',
+          '다양한 분야와 협업하는 조직',
+          '서로의 강점을 인정하는 분위기'
+        ],
+        growth: '타인의 요구보다 본인의 우선순위와 기준을 먼저 세워보세요.',
+        jobFairMission: '현직자나 다른 참가자 한 명에게 먼저 반갑게 말 걸어보기',
+        seniorQuestionCard: {
+          question: '다양한 사람들과 원활히 소통하기 위한 핵심 태도는 무엇인가요?',
+          tip: '현직자의 조직 내 커뮤니케이션 노하우와 협업 스타일을 탐색할 수 있습니다.'
+        }
+      }
+    };
+
+    const QUESTIONS = [
+      {
+        id: 1,
+        isFloorPlan: true,
+        title: 'Q1. 카페에 들어가면 가장 먼저 확인하는 것은?',
+        subtitle: '아래 평면도에서 당신의 발길이 가장 먼저 향하는 자리를 터치하세요.',
+        options: [
+          { type: 'VISION', label: 'A. 햇빛이 잘 들고 전망이 좋은 창가', name: '햇살 가득 창가 자리', seatCode: 'WINDOW', desc: '탁 트인 시야와 밝은 햇살로 아이디어가 샘솟는 창가', icon: '🪟', bg: 'bg-emerald-50/90 hover:bg-emerald-100 border-emerald-300 text-emerald-950' },
+          { type: 'FOCUS', label: 'B. 사람들의 이동이 적은 조용한 구석', name: '조용하고 아늑한 구석 자리', seatCode: 'CORNER', desc: '방해받지 않고 깊은 몰입과 집중이 가능한 아늑한 구석', icon: '📚', bg: 'bg-teal-50/90 hover:bg-teal-100 border-teal-300 text-teal-950' },
+          { type: 'ACTION', label: 'C. 콘센트와 넓은 테이블이 있는 자리', name: '전원 콘센트 직련 자리', seatCode: 'OUTLET', desc: '100% 배터리 충전! 노트북과 장비를 완비할 수 있는 자리', icon: '⚡', bg: 'bg-green-50/90 hover:bg-green-100 border-green-300 text-green-950' },
+          { type: 'CONNECT', label: 'D. 일행과 편하게 이야기할 수 있는 큰 테이블', name: '넓은 중앙 공유 테이블', seatCode: 'BIG_TABLE', desc: '사람들과 활발히 아이디어를 교환할 수 있는 오픈 스페이스', icon: '🤝', bg: 'bg-stone-100/90 hover:bg-stone-200 border-stone-300 text-stone-900' }
+        ]
+      },
+      {
+        id: 2,
+        isFloorPlan: false,
+        title: 'Q2. 원래 앉으려던 자리에 다른 사람이 앉아 있다면?',
+        subtitle: '당신의 자연스러운 반응과 대처 방식을 선택하세요.',
+        options: [
+          { label: '평소와 다른 새로운 자리를 찾아본다.', type: 'VISION', key: 'A' },
+          { label: '비슷하게 조용한 자리가 날 때까지 기다린다.', type: 'FOCUS', key: 'B' },
+          { label: '오늘 해야 할 일에 필요한 조건이 있는 자리를 찾는다.', type: 'ACTION', key: 'C' },
+          { label: '주변 사람들과 함께 앉을 수 있는 자리를 알아본다.', type: 'CONNECT', key: 'D' }
+        ]
+      },
+      {
+        id: 3,
+        isFloorPlan: false,
+        title: 'Q3. 카페에서 과제를 시작하려고 한다. 가장 먼저 하는 행동은?',
+        subtitle: '작업의 첫 단추를 꿰는 당신만의 방식',
+        options: [
+          { label: '떠오르는 아이디어를 자유롭게 적는다.', type: 'VISION', key: 'A' },
+          { label: '혼자 자료를 충분히 읽고 방향을 정한다.', type: 'FOCUS', key: 'B' },
+          { label: '해야 할 일을 순서대로 나누고 시간을 배분한다.', type: 'ACTION', key: 'C' },
+          { label: '함께하는 사람들과 먼저 의견을 나눈다.', type: 'CONNECT', key: 'D' }
+        ]
+      },
+      {
+        id: 4,
+        isFloorPlan: false,
+        title: 'Q4. 친구가 메뉴 선택을 어려워한다면?',
+        subtitle: '도움을 줄 때 나타나는 당신의 성향',
+        options: [
+          { label: '평소 먹어보지 않은 새로운 메뉴를 추천한다.', type: 'VISION', key: 'A' },
+          { label: '친구가 충분히 고민할 수 있도록 기다려준다.', type: 'FOCUS', key: 'B' },
+          { label: '가격, 취향, 카페인 여부를 정리해 선택지를 좁혀준다.', type: 'ACTION', key: 'C' },
+          { label: '친구가 좋아하는 맛과 취향을 물어보며 함께 고른다.', type: 'CONNECT', key: 'D' }
+        ]
+      },
+      {
+        id: 5,
+        isFloorPlan: false,
+        title: 'Q5. 팀 프로젝트를 시작할 때 나의 모습은?',
+        subtitle: '팀 내에서 발휘되는 당신의 역할',
+        options: [
+          { label: '새로운 콘셉트나 방향을 먼저 제안한다.', type: 'VISION', key: 'A' },
+          { label: '필요한 자료와 정보를 충분히 조사한다.', type: 'FOCUS', key: 'B' },
+          { label: '일정과 역할을 정리해 실행 계획을 만든다.', type: 'ACTION', key: 'C' },
+          { label: '팀원들이 편하게 의견을 말하도록 분위기를 만든다.', type: 'CONNECT', key: 'D' }
+        ]
+      },
+      {
+        id: 6,
+        isFloorPlan: false,
+        isWeighted: true,
+        title: 'Q6. 갑자기 계획에 없던 문제가 생겼다. 나는?',
+        subtitle: '✨ 동점 시 우선 반영되는 문제 해결 성향 문항입니다.',
+        options: [
+          { label: '기존 방식과 다른 해결 방법을 생각한다.', type: 'VISION', key: 'A' },
+          { label: '원인이 무엇인지 차분하게 분석한다.', type: 'FOCUS', key: 'B' },
+          { label: '우선순위를 정하고 바로 해결에 들어간다.', type: 'ACTION', key: 'C' },
+          { label: '관련된 사람들과 상황을 공유하고 함께 해결한다.', type: 'CONNECT', key: 'D' }
+        ]
+      },
+      {
+        id: 7,
+        isFloorPlan: false,
+        isWeighted: true,
+        title: 'Q7. 잡페어에 도착했을 때 가장 먼저 하고 싶은 활동은?',
+        subtitle: '✨ 동점 발생 시 1순위로 반영되는 최종 의사결정 문항입니다.',
+        options: [
+          { label: '처음 보는 이색 체험 부스에 참여한다.', type: 'VISION', key: 'A' },
+          { label: '나에게 맞는 직무를 진밀 분석받는다.', type: 'FOCUS', key: 'B' },
+          { label: '채용 정보와 준비 방법을 직접 확인한다.', type: 'ACTION', key: 'C' },
+          { label: '현직자와 직접 대화하며 이야기해본다.', type: 'CONNECT', key: 'D' }
+        ]
+      }
+    ];
+
+    const calculateResult = (userAnswers) => {
+      const scores = { VISION: 0, FOCUS: 0, ACTION: 0, CONNECT: 0 };
+      userAnswers.forEach((type) => { scores[type] = (scores[type] || 0) + 1; });
+
+      let maxScore = -1;
+      let winner = 'ACTION';
+
+      Object.keys(scores).forEach((type) => {
+        if (scores[type] > maxScore) {
+          maxScore = scores[type];
+          winner = type;
+        } else if (scores[type] === maxScore) {
+          const q7Answer = userAnswers[6];
+          const q6Answer = userAnswers[5];
+          if (type === q7Answer || type === q6Answer) {
+            winner = type;
+          }
+        }
+      });
+      return winner;
+    };
+
+    const GOOGLE_FORM_CONFIG = {
+      formUrl: "https://docs.google.com/forms/d/e/1FAIpQLSf7U3o58QkrHxUMjMTElSKX_q_ocqlcSTPPOEp6u7w3jqvWow/formResponse",
+      viewUrl: "https://docs.google.com/forms/d/e/1FAIpQLSf7U3o58QkrHxUMjMTElSKX_q_ocqlcSTPPOEp6u7w3jqvWow/viewform",
+      entries: {
+        nickname: "entry.1987662738",   // Q1. 닉네임
+        resultType: "entry.1849294311", // Q2. 결과 유형
+        rating: "entry.149307897",      // Q3. 만족도 별점
+        comment: "entry.2140491541"     // Q4. 의견 및 피드백
+      }
+    };
+
+    const sendFeedbackToGoogleForm = async (data) => {
+      if (!GOOGLE_FORM_CONFIG.formUrl || GOOGLE_FORM_CONFIG.formUrl.includes('YOUR_GOOGLE_FORM_ID')) {
+        console.log('[Google Form] 구글 폼 URL 미설정 - LocalStorage 저장만 수행됩니다.');
+        return false;
+      }
+
+      try {
+        const formData = new URLSearchParams();
+        formData.append(GOOGLE_FORM_CONFIG.entries.nickname, data.nickname || 'GUEST');
+        formData.append(GOOGLE_FORM_CONFIG.entries.resultType, data.result_type || 'VISION');
+        formData.append(GOOGLE_FORM_CONFIG.entries.rating, String(data.rating || 5));
+        formData.append(GOOGLE_FORM_CONFIG.entries.comment, data.comment || '');
+
+        await fetch(GOOGLE_FORM_CONFIG.formUrl, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+          },
+          body: formData.toString()
+        });
+
+        console.log('[Google Form] 구글 폼 실시간 전송 완료');
+        return true;
+      } catch (err) {
+        console.warn('[Google Form] 전송 예외 발생:', err);
+        return false;
+      }
+    };
+
+    const saveFeedback = async (data) => {
+      const item = {
+        id: `fb_${Date.now()}_${Math.random().toString(36).substr(2, 6)}`,
+        nickname: data.nickname || 'GUEST',
+        result_type: data.result_type || 'VISION',
+        rating: Number(data.rating) || 5,
+        comment: data.comment ? String(data.comment).trim() : '',
+        created_at: new Date().toISOString()
+      };
+
+      sendFeedbackToGoogleForm(item).catch((e) => console.warn('Google Form send warning:', e));
+
+      if (typeof window !== 'undefined' && window.supabaseClient) {
+        try {
+          const { error } = await window.supabaseClient.from('feedbacks').insert([item]);
+          if (!error) {
+            saveFeedbackToLocalStorage(item);
+            return item;
+          }
+        } catch (e) {
+          console.warn('Supabase save error, fallback to LocalStorage:', e);
+        }
+      }
+
+      saveFeedbackToLocalStorage(item);
+      return item;
+    };
+
+    const saveFeedbackToLocalStorage = (item) => {
+      try {
+        const existing = JSON.parse(localStorage.getItem('seat_your_opportunity_feedbacks') || '[]');
+        existing.unshift(item);
+        localStorage.setItem('seat_your_opportunity_feedbacks', JSON.stringify(existing));
+      } catch (err) {
+        console.error('LocalStorage write error:', err);
+      }
+    };
+
+    const getFeedbacks = () => {
+      try {
+        return JSON.parse(localStorage.getItem('seat_your_opportunity_feedbacks') || '[]');
+      } catch (err) {
+        return [];
+      }
+    };
+
+    const clearFeedbacks = () => {
+      try {
+        localStorage.removeItem('seat_your_opportunity_feedbacks');
+      } catch (err) {
+        console.error('LocalStorage clear error:', err);
+      }
+    };
+
+    const exportFeedbacksToCSV = (feedbacks) => {
+      if (!feedbacks || feedbacks.length === 0) return;
+      const headers = ['ID', '닉네임', '결과 유형', '별점(1-5)', '의견/피드백', '제출시간'];
+      const rows = feedbacks.map((f) => [
+        f.id,
+        `"${(f.nickname || '').replace(/"/g, '""')}"`,
+        f.result_type,
+        f.rating,
+        `"${(f.comment || '').replace(/"/g, '""')}"`,
+        f.created_at
+      ]);
+
+      const csvContent = '\uFEFF' + [headers.join(','), ...rows.map((r) => r.join(','))].join('\n');
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `career_cafe_feedbacks_${new Date().toISOString().slice(0, 10)}.csv`;
+      a.click();
+      URL.revokeObjectURL(url);
+    };
+
+    const generateCardImage = async (element) => {
+      if (typeof window !== 'undefined' && window.htmlToImage && window.htmlToImage.toPng) {
+        return await window.htmlToImage.toPng(element, { quality: 0.95, backgroundColor: '#ffffff', cacheBust: true });
+      }
+
+      const width = 360;
+      const height = element.offsetHeight || 650;
+      const cloned = element.cloneNode(true);
+      
+      const svgString = `
+        <svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}">
+          <foreignObject width="100%" height="100%">
+            <div xmlns="http://www.w3.org/1999/xhtml" style="font-family: sans-serif; background: #ffffff; padding: 10px;">
+              ${cloned.outerHTML}
+            </div>
+          </foreignObject>
+        </svg>
+      `;
+
+      const blob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      
+      return new Promise((resolve) => {
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          canvas.width = width * 2;
+          canvas.height = height * 2;
+          const ctx = canvas.getContext('2d');
+          ctx.scale(2, 2);
+          ctx.fillStyle = '#ffffff';
+          ctx.fillRect(0, 0, width, height);
+          ctx.drawImage(img, 0, 0);
+          URL.revokeObjectURL(url);
+          resolve(canvas.toDataURL('image/png'));
+        };
+        img.onerror = () => {
+          URL.revokeObjectURL(url);
+          resolve(null);
+        };
+        img.src = url;
+      });
+    };
+
+    function CareerCafeApp() {
+      const [screen, setScreen] = useState('intro');
+      const [nickname, setNickname] = useState('');
+      const [nicknameError, setNicknameError] = useState('');
+
+      const [currentQIndex, setCurrentQIndex] = useState(0);
+      const [answers, setAnswers] = useState([]);
+      const [finalResult, setFinalResult] = useState(null);
+
+      const [loadingProgress, setLoadingProgress] = useState(0);
+      const [loadingPhraseIndex, setLoadingPhraseIndex] = useState(0);
+
+      const [showMissionModal, setShowMissionModal] = useState(false);
+      const [toastMessage, setToastMessage] = useState(null);
+
+      // Mandatory Feedback Gating State
+      const [feedbackRating, setFeedbackRating] = useState(0);
+      const [feedbackComment, setFeedbackComment] = useState('');
+      const [isFeedbackSubmitted, setIsFeedbackSubmitted] = useState(false);
+      const feedbackSectionRef = useRef(null);
+
+      const [showAdminModal, setShowAdminModal] = useState(false);
+      const [showPasswordModal, setShowPasswordModal] = useState(false);
+      const [adminPassword, setAdminPassword] = useState('');
+      const [passwordError, setPasswordError] = useState('');
+      const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(false);
+      const [headerClickCount, setHeaderClickCount] = useState(0);
+      const [adminFeedbacks, setAdminFeedbacks] = useState([]);
+
+      const cardRef = useRef(null);
+      const charmRef = useRef(null);
+      const summaryCardRef = useRef(null);
+      const [isSavingCard, setIsSavingCard] = useState(false);
+      const [isSavingCharm, setIsSavingCharm] = useState(false);
+
+      const triggerToast = (msg) => {
+        setToastMessage(msg);
+        setTimeout(() => setToastMessage(null), 3200);
+      };
+
+      const handleAdminClick = () => {
+        if (isAdminAuthenticated) {
+          openAdminDashboard();
+        } else {
+          setAdminPassword('');
+          setPasswordError('');
+          setShowPasswordModal(true);
+        }
+      };
+
+      const handlePasswordSubmit = (e) => {
+        if (e) e.preventDefault();
+        if (adminPassword.trim() === '0621') {
+          setIsAdminAuthenticated(true);
+          setShowPasswordModal(false);
+          setAdminPassword('');
+          setPasswordError('');
+          openAdminDashboard();
+        } else {
+          setPasswordError('비밀번호가 올바르지 않습니다. (운영진 전용)');
+          setAdminPassword('');
+          triggerToast('❌ 비밀번호가 올바르지 않습니다. (운영진 전용)');
+        }
+      };
+
+      const handleHeaderClick = () => {
+        const nextCount = headerClickCount + 1;
+        setHeaderClickCount(nextCount);
+        if (nextCount >= 5) {
+          setHeaderClickCount(0);
+          handleAdminClick();
+        }
+      };
+
+      const openAdminDashboard = () => {
+        const list = getFeedbacks();
+        setAdminFeedbacks(list);
+        setShowAdminModal(true);
+        triggerToast('🔓 [관리자 모드] 부스 현황 Dashboard가 열렸습니다.');
+      };
+
+      const handleStartIntro = () => {
+        setScreen('nickname');
+      };
+
+      const handleNicknameSubmit = (e) => {
+        e?.preventDefault();
+        const trimmed = nickname.trim();
+        if (!trimmed) {
+          setNicknameError('닉네임을 1자 이상 입력해주세요!');
+          return;
+        }
+        if (trimmed.length > 8) {
+          setNicknameError('닉네임은 최대 8자까지 입력 가능합니다.');
+          return;
+        }
+        setNicknameError('');
+        setScreen('quiz');
+      };
+
+      const handleSelectOption = (selectedType) => {
+        const question = QUESTIONS[currentQIndex];
+        const newAnswers = [
+          ...answers.filter((a) => a.questionId !== question.id),
+          { questionId: question.id, selectedType: selectedType }
+        ];
+        setAnswers(newAnswers);
+
+        if (currentQIndex < QUESTIONS.length - 1) {
+          setTimeout(() => {
+            setCurrentQIndex((prev) => prev + 1);
+          }, 200);
+        } else {
+          setTimeout(() => {
+            calculateAndNavigateResult(newAnswers);
+          }, 250);
+        }
+      };
+
+      const calculateAndNavigateResult = (allAnswers) => {
+        setScreen('loading');
+
+        const answerTypesSequence = QUESTIONS.map((q) => {
+          const found = allAnswers.find((a) => a.questionId === q.id);
+          return found ? found.selectedType : 'VISION';
+        });
+
+        const winnerType = calculateResult(answerTypesSequence);
+        const calculatedResult = RESULT_TYPES[winnerType] || RESULT_TYPES.VISION;
+        setFinalResult(calculatedResult);
+      };
+
+      useEffect(() => {
+        if (screen === 'loading') {
+          setLoadingProgress(0);
+          setLoadingPhraseIndex(0);
+
+          const progressInterval = setInterval(() => {
+            setLoadingProgress((prev) => {
+              if (prev >= 100) {
+                clearInterval(progressInterval);
+                return 100;
+              }
+              return prev + 4;
+            });
+          }, 80);
+
+          const phraseInterval = setInterval(() => {
+            setLoadingPhraseIndex((prev) => (prev + 1) % 2);
+          }, 1000);
+
+          const timer = setTimeout(() => {
+            setScreen('result');
+          }, 2400);
+
+          return () => {
+            clearInterval(progressInterval);
+            clearInterval(phraseInterval);
+            clearTimeout(timer);
+          };
+        }
+      }, [screen]);
+
+      useEffect(() => {
+        if (typeof window !== 'undefined') {
+          const isAdminRoute =
+            window.location.pathname.includes('/admin') ||
+            window.location.hash === '#admin' ||
+            window.location.search.includes('admin=true');
+          if (isAdminRoute) {
+            openAdminDashboard();
+          }
+        }
+      }, []);
+
+      const handleSubmitFeedback = async () => {
+        if (isFeedbackSubmitted) return;
+
+        if (feedbackRating === 0 || feedbackComment.trim().length < 2) {
+          triggerToast('⭐ 별점 선택과 한줄 피드백(최소 2자 이상) 완성을 부탁드려요!');
+          return;
+        }
+
+        await saveFeedback({
+          nickname: nickname || 'GUEST',
+          result_type: finalResult?.id || 'VISION',
+          rating: feedbackRating,
+          comment: feedbackComment.trim()
+        });
+
+        setIsFeedbackSubmitted(true);
+        triggerToast('피드백 제출 완료! 영수증 확인 및 저장 기능이 해제되었습니다 🎉');
+      };
+
+      const handleOpenMissionModal = () => {
+        if (!isFeedbackSubmitted) {
+          triggerToast('⭐ 별점 선택과 한줄 피드백 완성을 부탁드려요!');
+          feedbackSectionRef.current?.scrollIntoView({ behavior: 'smooth' });
+          return;
+        }
+        setShowMissionModal(true);
+      };
+
+      const handleReset = () => {
+        if (!isFeedbackSubmitted) {
+          triggerToast('📝 리뷰 작성을 완료해야 테스트를 다시 진행할 수 있어요!');
+          feedbackSectionRef.current?.scrollIntoView({ behavior: 'smooth' });
+          return;
+        }
+        setScreen('intro');
+        setAnswers([]);
+        setCurrentQIndex(0);
+        setNickname('');
+        setFeedbackRating(0);
+        setFeedbackComment('');
+        setIsFeedbackSubmitted(false);
+        setShowMissionModal(false);
+        triggerToast('🔄 테스트가 초기화되었습니다. 새로 시작해보세요!');
+      };
+
+      const handleSaveResult = async () => {
+        if (!isFeedbackSubmitted) {
+          triggerToast('⭐ 별점 선택과 한줄 피드백 완성을 부탁드려요!');
+          feedbackSectionRef.current?.scrollIntoView({ behavior: 'smooth' });
+          return;
+        }
+
+        const targetEl = summaryCardRef.current || cardRef.current;
+        if (!targetEl || isSavingCard) return;
+        setIsSavingCard(true);
+
+        try {
+          if (document.fonts && document.fonts.ready) {
+            await document.fonts.ready;
+          }
+
+          let dataUrl = null;
+
+          if (typeof window !== 'undefined' && window.html2canvas) {
+            const canvas = await window.html2canvas(targetEl, {
+              scale: 2,
+              useCORS: true,
+              allowTaint: true,
+              backgroundColor: '#FFFFFF',
+              width: 360,
+              windowWidth: 360,
+              logging: false,
+              onclone: (clonedDoc) => {
+                const card = clonedDoc.querySelector('#summary-receipt-card') || clonedDoc.querySelector('#receipt-card-container');
+                if (card) {
+                  card.style.width = '360px';
+                  card.style.minWidth = '360px';
+                  card.style.maxWidth = '360px';
+                  card.style.margin = '0 auto';
+                  card.style.fontFamily = "'Noto Sans KR', sans-serif, apple-system";
+                }
+              }
+            });
+            dataUrl = canvas.toDataURL('image/png');
+          } else {
+            dataUrl = await generateCardImage(targetEl);
+          }
+
+          if (dataUrl) {
+            const link = document.createElement('a');
+            const formattedName = (nickname || 'MY_TYPE').replace(/\s+/g, '_');
+            link.download = `SEAT_YOUR_OPPORTUNITY_${formattedName}.png`;
+            link.href = dataUrl;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            triggerToast('영수증 이미지가 성공적으로 저장되었습니다.');
+          } else {
+            throw new Error('Image generation failed');
+          }
+        } catch (err) {
+          console.error('Failed to download receipt image:', err);
+          triggerToast('이미지 저장 중 오류가 발생했습니다. 화면을 직접 캡처해 주세요!');
+        } finally {
+          setIsSavingCard(false);
+        }
+      };
+
+      const handleSaveCharmImage = async () => {
+        if (!charmRef.current || isSavingCharm) return;
+        setIsSavingCharm(true);
+
+        try {
+          if (document.fonts && document.fonts.ready) {
+            await document.fonts.ready;
+          }
+
+          const imgElements = charmRef.current?.querySelectorAll('img');
+          if (imgElements && imgElements.length > 0) {
+            await Promise.all(
+              Array.from(imgElements).map(
+                (img) =>
+                  new Promise((resolve) => {
+                    if (img.complete) resolve(true);
+                    else img.onload = img.onerror = () => resolve(true);
+                  })
+              )
+            );
+          }
+
+          let dataUrl = null;
+          if (typeof window !== 'undefined' && window.html2canvas) {
+            const canvas = await window.html2canvas(charmRef.current, {
+              scale: 2,
+              useCORS: true,
+              allowTaint: true,
+              backgroundColor: '#FFFFFF',
+              logging: false
+            });
+            dataUrl = canvas.toDataURL('image/png');
+          } else {
+            dataUrl = await generateCardImage(charmRef.current);
+          }
+
+          if (dataUrl) {
+            const link = document.createElement('a');
+            const formattedName = (nickname || 'MY_TYPE').replace(/\s+/g, '_');
+            link.download = `SEAT_YOUR_OPPORTUNITY_LUCKY_CHARM_${formattedName}.png`;
+            link.href = dataUrl;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            triggerToast('🍀 커리어 행운 부적 이미지가 성공적으로 저장되었습니다!');
+          } else {
+            throw new Error('Charm image generation failed');
+          }
+        } catch (err) {
+          console.error('Charm download error:', err);
+          triggerToast('부적 이미지 저장 중 오류가 발생했습니다. 화면을 캡처해 주세요!');
+        } finally {
+          setIsSavingCharm(false);
+        }
+      };
+
+
+
+      const LOADING_PHRASES = [
+        "당신에게 가장 잘 맞는 자리를 찾고 있어요...",
+        "선택한 답변에서 커리어 강점을 발견하는 중..."
+      ];
+
+      const calcAvgRating = () => {
+        if (!adminFeedbacks || adminFeedbacks.length === 0) return '0.0';
+        const sum = adminFeedbacks.reduce((acc, curr) => acc + (curr.rating || 0), 0);
+        return (sum / adminFeedbacks.length).toFixed(1);
+      };
+
+      const calcTypeCounts = () => {
+        const counts = { VISION: 0, FOCUS: 0, ACTION: 0, CONNECT: 0 };
+        adminFeedbacks.forEach((f) => {
+          if (counts[f.result_type] !== undefined) {
+            counts[f.result_type] += 1;
+          }
+        });
+        return counts;
+      };
+
+      const resData = finalResult || RESULT_TYPES.ACTION || RESULT_TYPES.VISION;
+      const preferredEnvList = Array.isArray(resData?.preferredEnvironment)
+        ? resData.preferredEnvironment
+        : (resData?.environment ? [resData.environment] : []);
+      const tagsList = Array.isArray(resData?.tags) ? resData.tags : [];
+      const questionCardObj = resData?.seniorQuestionCard || {
+        question: '새 아이디어를 실제 업무에 반영할 때 가장 중요한 기준은?',
+        tip: '기업의 미래 성장 전략과 창의적 비전 결합 가능성을 확인하세요.'
+      };
+
+      return (
+        <div className="min-h-screen bg-[#FAF7F2] text-[#1E3A2B] font-sans flex items-center justify-center p-3 sm:p-6 antialiased select-none">
+          {toastMessage && (
+            <div className="fixed top-5 z-50 px-5 py-3 rounded-full bg-[#007042] text-white text-xs sm:text-sm font-bold shadow-2xl border border-emerald-300 animate-bounce text-center">
+              {toastMessage}
+            </div>
+          )}
+
+          <div className="w-full max-w-md bg-white rounded-3xl shadow-xl shadow-emerald-950/10 overflow-hidden border border-emerald-200/80 relative h-[90vh] max-h-[800px] min-h-[660px] flex flex-col justify-between">
+            
+            {/* SCREEN 1: INTRO */}
+            {screen === 'intro' && (
+              <div className="flex-1 flex flex-col justify-between p-6 bg-gradient-to-b from-[#FFFDF9] via-[#FAF7F2] to-[#E0F2F1]/30 text-center relative">
+                
+                {/* Top Right Official Branding Logo: JA Korea */}
+                <div className="absolute top-4 right-4 flex items-center gap-1.5 opacity-90 z-10">
+                  <img 
+                    src="/images/ja-korea-logo.png" 
+                    alt="JA Korea Logo" 
+                    className="h-6 object-contain"
+                    onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                  />
+                  <span className="text-[11px] font-extrabold text-[#007042] bg-white/90 px-2 py-0.5 rounded-full border border-emerald-200 shadow-2xs">
+                    JA Korea
+                  </span>
+                </div>
+
+                <div className="pt-6 cursor-pointer" onClick={handleHeaderClick}>
+                  <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#E0F2F1] text-[#007042] text-xs font-black border border-emerald-300 shadow-xs mb-4">
+                    <span>☕ CAREER POP-UP EVENT</span>
+                  </div>
+                  <h1 className="text-2xl sm:text-3xl font-black text-[#007042] tracking-tight mb-2 leading-tight">
+                    Seat Your Opportunity
+                  </h1>
+                  <p className="text-xs sm:text-sm text-emerald-900 font-bold">
+                    카페 자리로 알아보는 나의 커리어 유형
+                  </p>
+                </div>
+
+                {/* Central Hero Coffee Image Container */}
+                <div className="my-auto py-4 flex flex-col items-center justify-center">
+                  <div className="relative mb-4 group">
+                    <div className="absolute -top-6 left-1/2 -translate-x-1/2 flex gap-1">
+                      <span className="w-1.5 h-6 bg-emerald-400/50 rounded-full blur-[1px] animate-pulse" />
+                      <span className="w-1.5 h-8 bg-emerald-500/60 rounded-full blur-[1px] animate-pulse delay-150" />
+                      <span className="w-1.5 h-5 bg-emerald-400/50 rounded-full blur-[1px] animate-pulse delay-300" />
+                    </div>
+
+                    <div className="w-32 h-32 sm:w-36 sm:h-36 rounded-full bg-gradient-to-tr from-emerald-200 via-teal-100 to-emerald-50 p-1.5 shadow-lg border-2 border-emerald-300 flex items-center justify-center relative overflow-hidden group-hover:scale-105 transition-transform duration-300">
+                      <img
+                        src="/images/coffee.png"
+                        alt="Starbucks Ice Americano"
+                        className="w-full h-full object-contain drop-shadow-md transition-all duration-300"
+                        onError={(e) => {
+                          e.currentTarget.onerror = null;
+                          e.currentTarget.src = "./Images/coffee.jpg";
+                        }}
+                      />
+                    </div>
+                  </div>
+
+                  <p className="text-xs text-emerald-950 px-4 leading-relaxed font-medium mb-3 max-w-xs">
+                    카페에서 자리를 고르는 방식에도 나의 커리어 성향이 드러납니다. 7개의 질문에 답하고 나만의 지정석 영수증을 받아보세요.
+                  </p>
+
+                  <div className="inline-flex items-center gap-2 text-xs text-[#007042] bg-[#E0F2F1]/80 px-4 py-2 rounded-xl border border-emerald-300 font-bold shadow-xs">
+                    <span>⏱️ 소요 시간 약 2분</span>
+                  </div>
+                </div>
+
+                <div className="pb-2">
+                  <button
+                    onClick={handleStartIntro}
+                    className="w-full py-4 px-6 rounded-2xl bg-[#007042] hover:bg-[#1E3A2B] text-white font-bold text-base shadow-lg shadow-emerald-950/20 active:scale-[0.98] transition-all flex items-center justify-center gap-2"
+                  >
+                    <span>테스트 시작하기</span>
+                    <span>➔</span>
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* SCREEN 2: NICKNAME */}
+            {screen === 'nickname' && (
+              <div className="flex-1 flex flex-col justify-between p-6 bg-[#FFFDF9]">
+                <div className="pt-4">
+                  <div className="inline-block px-3 py-1 rounded-md bg-[#E0F2F1] text-[#007042] text-xs font-black mb-3 border border-emerald-300">
+                    STEP 0. 개인화 설정
+                  </div>
+                  <h2 className="text-xl font-extrabold text-[#007042] mb-1.5">
+                    결과 영수증에 표시할 닉네임을 입력해 주세요.
+                  </h2>
+                  <p className="text-xs text-stone-600 leading-relaxed font-medium">
+                    나만의 맞춤 커리어 지정석 영수증이 발급됩니다.
+                  </p>
+                </div>
+
+                <form onSubmit={handleNicknameSubmit} className="my-auto space-y-4">
+                  <div className="space-y-2">
+                    <label className="block text-xs font-bold text-[#007042]">
+                      닉네임 (최대 8자)
+                    </label>
+                    <div className="relative">
+                      <input
+                        type="text"
+                        value={nickname}
+                        onChange={(e) => {
+                          setNickname(e.target.value);
+                          if (nicknameError) setNicknameError('');
+                        }}
+                        placeholder="예: 커피마니아"
+                        maxLength={8}
+                        className={`w-full px-4 py-3.5 rounded-xl border ${
+                          nicknameError ? 'border-red-400 bg-red-50/50' : 'border-emerald-200 bg-white'
+                        } focus:outline-none focus:ring-2 focus:ring-[#007042] text-sm text-[#1E3A2B] font-medium shadow-xs transition-all`}
+                        autoFocus
+                      />
+                      <span className="absolute right-3 top-3.5 text-xs text-stone-400 font-mono">
+                        {nickname.length}/8
+                      </span>
+                    </div>
+                    {nicknameError && (
+                      <p className="text-xs font-semibold text-red-500 flex items-center gap-1">
+                        <span>⚠️</span> {nicknameError}
+                      </p>
+                    )}
+                  </div>
+                </form>
+
+                <div className="pb-2">
+                  <button
+                    onClick={handleNicknameSubmit}
+                    disabled={!nickname.trim()}
+                    className={`w-full py-4 px-6 rounded-2xl font-bold text-sm shadow-md transition-all flex items-center justify-center gap-2 ${
+                      nickname.trim()
+                        ? 'bg-[#007042] hover:bg-[#1E3A2B] text-white active:scale-[0.98]'
+                        : 'bg-stone-200 text-stone-400 cursor-not-allowed'
+                    }`}
+                  >
+                    <span>나의 지정석 찾으러 가기</span>
+                    <span>➔</span>
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* SCREEN 3: QUIZ */}
+            {screen === 'quiz' && (
+              <div className="flex-1 flex flex-col justify-between p-5 sm:p-6 bg-[#FFFDF9]">
+                <div>
+                  <div className="flex items-center justify-between text-xs font-bold text-[#007042] mb-2">
+                    <span className="flex items-center gap-1.5">
+                      <span className="text-base">☕</span>
+                      <span>{currentQIndex + 1} / {QUESTIONS.length} 문항 진행 중...</span>
+                    </span>
+                    <span className="text-[#007042] font-black">
+                      {Math.round(((currentQIndex + 1) / QUESTIONS.length) * 100)}%
+                    </span>
+                  </div>
+
+                  <div className="w-full h-2.5 bg-emerald-100/70 rounded-full overflow-hidden p-0.5 border border-emerald-200">
+                    <div
+                      className="h-full bg-gradient-to-r from-[#007042] to-emerald-500 rounded-full transition-all duration-300 ease-out"
+                      style={{ width: `${((currentQIndex + 1) / QUESTIONS.length) * 100}%` }}
+                    />
+                  </div>
+                </div>
+
+                <div className="my-auto py-3">
+                  <div className="mb-4">
+                    <h3 className="text-base sm:text-lg font-black text-[#1E3A2B] leading-snug mb-1">
+                      {QUESTIONS[currentQIndex].title}
+                    </h3>
+                    <p className="text-xs text-stone-500 font-medium">
+                      {QUESTIONS[currentQIndex].subtitle}
+                    </p>
+                  </div>
+
+                  {QUESTIONS[currentQIndex].isFloorPlan ? (
+                    <div className="space-y-2.5">
+                      <div className="w-full py-1.5 bg-[#E0F2F1] rounded-t-xl text-center text-[11px] font-black text-[#007042] border border-b-0 border-emerald-300 tracking-wider">
+                        🚪 CAFE MAIN ENTRANCE (카페 입구)
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-2.5 p-2.5 bg-emerald-50/40 rounded-b-xl border border-emerald-200">
+                        {QUESTIONS[currentQIndex].options.map((opt) => (
+                          <button
+                            key={opt.type}
+                            onClick={() => handleSelectOption(opt.type)}
+                            className={`p-3.5 rounded-xl border text-left transition-all duration-200 flex flex-col justify-between h-32 ${opt.bg} hover:shadow-md hover:scale-[1.02] active:scale-[0.98] group relative overflow-hidden`}
+                          >
+                            <div className="flex items-center justify-between w-full">
+                              <span className="text-2xl group-hover:scale-110 transition-transform">
+                                {opt.icon}
+                              </span>
+                              <span className="text-[10px] font-extrabold px-1.5 py-0.5 rounded bg-white/90 border border-emerald-200 shadow-xs">
+                                {opt.seatCode}
+                              </span>
+                            </div>
+                            <div>
+                              <div className="text-xs font-bold mb-0.5">{opt.name}</div>
+                              <div className="text-[10px] text-stone-600 line-clamp-2 leading-tight font-normal">
+                                {opt.desc}
+                              </div>
+                            </div>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="space-y-2.5">
+                      {QUESTIONS[currentQIndex].options.map((opt) => {
+                        const isSelected = answers.find(
+                          (a) => a.questionId === QUESTIONS[currentQIndex].id && a.selectedType === opt.type
+                        );
+                        return (
+                          <button
+                            key={opt.key}
+                            onClick={() => handleSelectOption(opt.type)}
+                            className={`w-full p-3.5 sm:p-4 rounded-xl border text-left transition-all duration-200 flex items-start gap-3 ${
+                              isSelected
+                                ? 'bg-[#007042] text-white border-[#007042] shadow-md ring-2 ring-emerald-300'
+                                : 'bg-white text-[#1E3A2B] border-emerald-200 hover:bg-emerald-50/60 hover:border-emerald-300 active:scale-[0.99]'
+                            }`}
+                          >
+                            <span
+                              className={`w-6 h-6 rounded-full text-xs font-extrabold flex items-center justify-center shrink-0 mt-0.5 ${
+                                isSelected ? 'bg-emerald-200 text-[#007042]' : 'bg-emerald-100 text-[#007042]'
+                              }`}
+                            >
+                              {opt.key}
+                            </span>
+                            <span className="text-xs sm:text-sm font-medium leading-relaxed">
+                              {opt.label}
+                            </span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+
+                <div className="flex items-center justify-between pt-2 border-t border-emerald-100">
+                  <button
+                    disabled={currentQIndex === 0}
+                    onClick={() => setCurrentQIndex((prev) => Math.max(0, prev - 1))}
+                    className={`text-xs font-bold px-3 py-1.5 rounded-lg transition-all ${
+                      currentQIndex === 0
+                        ? 'text-stone-300 cursor-not-allowed'
+                        : 'text-stone-600 hover:bg-stone-100'
+                    }`}
+                  >
+                    ← 이전 문항
+                  </button>
+                  <span className="text-[11px] text-stone-400 font-medium">
+                    선택 시 자동 이동됩니다
+                  </span>
+                </div>
+              </div>
+            )}
+
+            {/* SCREEN 4: LOADING */}
+            {screen === 'loading' && (
+              <div className="flex-1 flex flex-col items-center justify-center p-6 bg-gradient-to-b from-[#FFFDF9] to-[#E0F2F1]/30 text-center">
+                <div className="relative mb-6">
+                  <div className="w-24 h-24 rounded-full bg-emerald-100 border-2 border-emerald-300 flex items-center justify-center animate-pulse shadow-md">
+                    <span className="text-5xl animate-bounce">☕</span>
+                  </div>
+                  <div className="absolute top-0 left-0 w-24 h-24 border-4 border-[#007042] border-t-transparent rounded-full animate-spin" />
+                </div>
+
+                <div className="text-2xl font-black text-[#007042] mb-2">
+                  {loadingProgress}%
+                </div>
+
+                <p className="text-xs sm:text-sm font-bold text-emerald-950 h-10 flex items-center justify-center px-4 leading-snug animate-pulse">
+                  {LOADING_PHRASES[loadingPhraseIndex]}
+                </p>
+
+                <div className="w-48 h-2 bg-emerald-100 rounded-full overflow-hidden mt-6 border border-emerald-200">
+                  <div
+                    className="h-full bg-gradient-to-r from-[#007042] to-emerald-400 transition-all duration-150"
+                    style={{ width: `${loadingProgress}%` }}
+                  />
+                </div>
+              </div>
+            )}
+
+            {/* SCREEN 5: RESULT SCREEN */}
+            {screen === 'result' && (
+              <div className="flex-1 min-h-0 flex flex-col bg-[#FAF7F2] relative overflow-hidden">
+                
+                {/* 1. Scrollable Main Viewport */}
+                <div className="flex-1 min-h-0 overflow-y-auto max-h-[75vh] p-4 sm:p-5 space-y-4 touch-pan-y [webkit-overflow-scrolling:touch] scrollbar-thin scrollbar-thumb-emerald-300 scrollbar-track-transparent">
+                  
+                  {/* Mandatory Feedback Gating Banner */}
+                  {!isFeedbackSubmitted && (
+                    <div className="p-3 bg-amber-50 rounded-xl border border-amber-300 shadow-2xs text-left space-y-1 animate-pulse">
+                      <div className="flex items-center gap-1.5 text-xs font-black text-amber-900">
+                        <span>📢</span> <span>필수 제출: 별점 피드백 작성 안내</span>
+                      </div>
+                      <p className="text-[11px] text-amber-800 font-medium leading-relaxed">
+                        아래 <strong>별점 피드백(1~5점)</strong>을 제출해 주시면 <strong>영수증 이미지 저장</strong> 및 <strong>잡페어 미션</strong>이 즉시 해제됩니다!
+                      </p>
+                    </div>
+                  )}
+
+                  {/* Off-Screen Hidden Summary Receipt Card (Captured with summaryCardRef) */}
+                  <div className="absolute left-[-9999px] top-[-9999px] pointer-events-none select-none">
+                    <div
+                      id="summary-receipt-card"
+                      ref={summaryCardRef}
+                      style={{
+                        width: '360px',
+                        minWidth: '360px',
+                        maxWidth: '360px',
+                        padding: '24px',
+                        backgroundColor: '#ffffff',
+                        fontFamily: "'Noto Sans KR', sans-serif, apple-system",
+                        color: '#111111',
+                        boxSizing: 'border-box'
+                      }}
+                    >
+                      {/* Simple Plain Text Header - NO ROUNDED BORDER BADGE BOXES */}
+                      <div style={{ borderBottom: '1px dashed #cccccc', paddingBottom: '12px', marginBottom: '16px', textAlign: 'left' }}>
+                        <p style={{ fontSize: '11px', color: '#666666', fontWeight: 'bold', margin: '0 0 4px 0' }}>
+                          CAFE SEAT YOUR OPPORTUNITY | JA KOREA OFFICIAL
+                        </p>
+                        <h1 style={{ fontSize: '20px', fontWeight: 'bold', margin: '8px 0', color: '#111111' }}>
+                          CAREER SEAT RECEIPT
+                        </h1>
+                        <p style={{ fontSize: '13px', color: '#333333', fontWeight: 'bold', margin: '4px 0' }}>
+                          CUSTOMER: {nickname || '참가자'} 님
+                        </p>
+                        <p style={{ fontSize: '12px', color: '#888888', margin: '4px 0' }}>
+                          DATE: 2026.07.24 | ORDER: #2026-SEAT | STATUS: APPROVED
+                        </p>
+                      </div>
+
+                      <div style={{ textAlign: 'center', margin: '20px 0' }}>
+                        <span style={{ fontSize: '12px', color: '#007042', fontWeight: 'bold' }}>
+                          [ SEAT TYPE: {resData.seatName || '지정석'} ]
+                        </span>
+                        <h2 style={{ fontSize: '22px', fontWeight: 'bold', margin: '8px 0', color: '#111111' }}>
+                          {resData.title || '나의 커리어 지정석'}
+                        </h2>
+                        <p style={{ fontSize: '14px', color: '#555555', fontStyle: 'italic', margin: '4px 0' }}>
+                          "{resData.subTitle || '나만의 커리어 유형분석 결과'}"
+                        </p>
+                      </div>
+
+                      <div style={{ textAlign: 'center', marginBottom: '20px' }}>
+                        <p style={{ fontSize: '14px', fontWeight: 'bold', color: '#333333', margin: 0 }}>
+                          {tagsList.map(t => `#${t.replace(/^#/, '')}`).join('   ')}
+                        </p>
+                      </div>
+
+                      <div style={{ backgroundColor: '#f9f9f9', border: '1px solid #eeeeee', padding: '16px', borderRadius: '8px', marginBottom: '20px', textAlign: 'left' }}>
+                        <p style={{ fontSize: '12px', fontWeight: 'bold', color: '#007042', margin: '0 0 4px 0' }}>
+                          🎯 TODAY'S JOB FAIR MISSION
+                        </p>
+                        <p style={{ fontSize: '14px', fontWeight: 'bold', color: '#222222', margin: 0 }}>
+                          "{resData.jobFairMission || '오늘 현직자에게 시원하게 질문하기'}"
+                        </p>
+                      </div>
+
+                      <div style={{ textAlign: 'center', borderTop: '1px dashed #cccccc', paddingTop: '16px' }}>
+                        <div style={{ fontSize: '24px', letterSpacing: '4px', color: '#111111', fontWeight: 'bold' }}>
+                          ||||||||||||||||||||||||||
+                        </div>
+                        <p style={{ fontSize: '11px', color: '#888888', marginTop: '8px', fontWeight: 'bold' }}>
+                          * THANK YOU FOR VISITING *
+                        </p>
+                        <p style={{ fontSize: '9px', color: '#999999', marginTop: '2px' }}>
+                          SEAT YOUR OPPORTUNITY • JA KOREA x JOB FAIR 2026
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* REALISTIC CAFE RECEIPT CONTAINER */}
+                  <div
+                    ref={cardRef}
+                    id="receipt-card-container"
+                    data-receipt-card="true"
+                    className="bg-white border border-stone-300 shadow-xl relative font-sans text-stone-900 overflow-hidden w-[360px] min-w-[360px] max-w-[360px] mx-auto text-left block"
+                  >
+                    
+                    {/* Thermal Header with JA Korea Partner Branding */}
+                    <div
+                      className="p-5 text-center bg-[#FDFDFD] border-b border-dashed border-stone-300 cursor-pointer select-none block"
+                      onClick={handleHeaderClick}
+                    >
+                      <div className="text-3xl mb-1 flex items-center justify-center">
+                        {resData.seatIcon || '☕'}
+                      </div>
+                      
+                      {/* Header Row 1: Brand Meta & JA Korea Badge Table */}
+                      <table className="w-full text-[11px] font-mono font-bold text-stone-600 border-b border-stone-200 pb-1.5 mb-2 border-collapse">
+                        <tbody>
+                          <tr>
+                            <td className="text-left text-stone-700 align-middle py-0.5">
+                              CAFE SEAT YOUR OPPORTUNITY
+                            </td>
+                            <td className="text-right align-middle py-0.5">
+                              <span className="inline-block px-2 py-0.5 rounded bg-emerald-100 text-[#007042] text-[10px] font-black leading-snug border border-emerald-300 align-middle">
+                                JA Korea
+                              </span>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+
+                      {/* Header Row 2: Title */}
+                      <h3 className="text-lg font-black text-stone-900 tracking-tight leading-snug my-1.5 text-center">
+                        CAREER SEAT RECEIPT
+                      </h3>
+                      
+                      {/* Header Row 3: 2-Column Table Grid (Stacked Left / Right) */}
+                      <table className="w-full text-[10px] font-mono text-stone-600 border-t border-dashed border-stone-200 pt-2 mt-2 border-collapse">
+                        <tbody>
+                          <tr>
+                            <td className="w-1/2 text-left py-0.5 text-stone-600 font-bold align-top">
+                              ORDER NO: #2026-SEAT
+                            </td>
+                            <td className="w-1/2 text-right py-0.5 text-stone-600 font-bold align-top">
+                              DATE: 2026.07.24
+                            </td>
+                          </tr>
+                          <tr>
+                            <td className="w-1/2 text-left py-0.5 text-stone-800 font-extrabold align-middle">
+                              CUSTOMER: {nickname || 'GUEST'} 님
+                            </td>
+                            <td className="w-1/2 text-right py-0.5 align-middle">
+                              <span className={`inline-block px-2 py-0.5 rounded text-[9px] font-bold leading-snug border align-middle ${resData.stampColor || 'text-[#007042] border-[#007042] bg-emerald-50'}`}>
+                                {resData.stampBadge || '[ APPROVED ]'}
+                              </span>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+
+                    {/* Receipt Itemized Results Body */}
+                    <div className="p-5 space-y-4 text-left font-sans block">
+                      
+                      {/* Item 1: 커리어 지정석 */}
+                      <div>
+                        <table className="w-full text-[11px] font-mono font-bold text-stone-500 border-b border-stone-200 pb-1 mb-1.5 border-collapse">
+                          <tbody>
+                            <tr>
+                              <td className="text-left py-0.5">ITEM / DESCRIPTION</td>
+                              <td className="text-right py-0.5">SEAT TYPE</td>
+                            </tr>
+                          </tbody>
+                        </table>
+
+                        <table className="w-full border-collapse mb-1">
+                          <tbody>
+                            <tr>
+                              <td className="text-left font-black text-base text-stone-900 leading-snug align-middle">
+                                {resData.title || '나의 커리어 지정석'}
+                              </td>
+                              <td className="text-right align-middle shrink-0 pl-2">
+                                <span className="inline-block text-xs px-2.5 py-0.5 rounded-full font-bold leading-snug bg-emerald-50 text-[#007042] border border-emerald-300 align-middle">
+                                  {resData.seatName || '지정석'}
+                                </span>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+
+                        <p className="text-xs text-stone-600 font-medium leading-relaxed mt-0.5">
+                          "{resData.subTitle || '나만의 커리어 유형분석 결과'}"
+                        </p>
+                      </div>
+
+                      {/* Item 2: 대표 강점 태그 */}
+                      <div>
+                        <div className="text-[11px] font-mono font-bold text-stone-500 mb-1.5">
+                          [KEY STRENGTHS / 대표 강점]
+                        </div>
+                        <div className="block space-x-1 space-y-1">
+                          {tagsList.map((tag, i) => (
+                            <span
+                              key={i}
+                              className="inline-block px-2.5 py-0.5 rounded bg-stone-100 text-stone-900 text-xs font-bold leading-snug border border-stone-300 align-middle"
+                            >
+                              {tag}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Item 3: 추천 업무 환경 */}
+                      <div className="space-y-1.5">
+                        <div className="text-[11px] font-mono font-bold text-stone-500 mb-1">
+                          [WORK ENVIRONMENT / 추천 업무 환경]
+                        </div>
+                        <ul className="space-y-1.5 text-xs text-stone-800 font-normal">
+                          {preferredEnvList.map((item, idx) => (
+                            <li key={idx} className="flex items-center justify-between gap-1">
+                              <span className="shrink-0 text-emerald-700 font-bold">✓</span>
+                              <span className="font-medium text-stone-900 leading-snug">{item}</span>
+                              <span className="flex-1 border-b border-dotted border-stone-300 mx-1" />
+                              <span className="text-[10px] font-mono text-stone-400 shrink-0">FIT</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+
+                      {/* Item 4: 성장 포인트 */}
+                      <div className="p-3 bg-stone-50 rounded-lg border border-stone-200">
+                        <div className="text-[11px] font-bold text-stone-900 mb-1 flex items-center gap-1">
+                          <span>🚀</span> <span>성장 포인트 (Growth Point)</span>
+                        </div>
+                        <p className="text-xs text-stone-700 font-medium leading-relaxed">
+                          {resData.growth || '나만의 커리어 성장 목표를 다듬어보세요.'}
+                        </p>
+                      </div>
+
+                      {/* Item 5: [오늘의 잡페어 미션] Coupon Box */}
+                      <div className="p-3 bg-emerald-50/80 rounded-xl border border-dashed border-[#007042] relative">
+                        <table className="w-full text-[11px] font-bold text-[#007042] mb-1.5 border-collapse">
+                          <tbody>
+                            <tr>
+                              <td className="text-left align-middle">🎟️ TODAY'S JOB FAIR MISSION</td>
+                              <td className="text-right align-middle">
+                                <span className="inline-block text-[9px] font-mono leading-snug bg-emerald-200 text-[#007042] px-1.5 py-0.5 rounded font-black border border-emerald-400 align-middle">COUPON</span>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                        <p className="text-xs font-bold text-stone-900 leading-snug">
+                          "{resData.jobFairMission || '오늘 현직자에게 시원하게 질문하기'}"
+                        </p>
+                      </div>
+
+                      {/* Item 6: 현직자 멘토 질문 카드 */}
+                      <div className="p-3 bg-white rounded-lg border border-stone-300 space-y-1">
+                        <table className="w-full text-[11px] font-bold text-stone-900 mb-1 border-collapse">
+                          <tbody>
+                            <tr>
+                              <td className="text-left align-middle">💬 현직자 멘토 추천 질문</td>
+                              <td className="text-right align-middle">
+                                <span className="inline-block text-[10px] text-stone-500 font-mono leading-snug border border-stone-300 px-1 py-0.5 rounded align-middle">Q&A CARD</span>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                        <p className="text-xs font-bold text-stone-900 leading-snug">
+                          "{questionCardObj.question}"
+                        </p>
+                        {questionCardObj.tip && (
+                          <p className="text-[10px] text-stone-500 italic leading-relaxed mt-1">
+                            Tip: {questionCardObj.tip}
+                          </p>
+                        )}
+                      </div>
+
+                    </div>
+
+                    {/* Thermal Barcode Bottom */}
+                    <div className="p-4 bg-stone-50 border-t border-dashed border-stone-300 text-center font-mono space-y-1 block">
+                      <div className="flex items-center justify-center gap-1 h-8">
+                        {[3,1,4,1,5,9,2,6,5,3,5,8,9,7,9,3,2,3,8,4,6,2].map((w, idx) => (
+                          <span
+                            key={idx}
+                            className="bg-stone-900 h-full rounded-xs shrink-0"
+                            style={{ width: `${(w % 3) + 1.5}px` }}
+                          />
+                        ))}
+                      </div>
+                      <div className="text-[10px] font-bold text-stone-600 tracking-wider leading-snug">
+                        * THANK YOU FOR VISITING *
+                      </div>
+                      <div className="text-[9px] text-stone-400 leading-snug">
+                        SEAT YOUR OPPORTUNITY • JA KOREA x JOB FAIR 2026
+                      </div>
+                    </div>
+
+                    {/* Sawtooth / Zig-zag Cut Edge */}
+                    <div className="w-full overflow-hidden leading-none -mt-1 select-none">
+                      <svg className="w-full h-3 text-stone-100 fill-current" viewBox="0 0 100 10" preserveAspectRatio="none">
+                        <polygon points="0,0 5,10 10,0 15,10 20,0 25,10 30,0 35,10 40,0 45,10 50,0 55,10 60,0 65,10 70,0 75,10 80,0 85,10 90,0 95,10 100,0 100,0 0,0" />
+                      </svg>
+                    </div>
+                  </div>
+
+                  {/* Feedback Form Component */}
+                  <div
+                    ref={feedbackSectionRef}
+                    className={`p-4 rounded-xl border shadow-xs text-left space-y-3 transition-all ${
+                      isFeedbackSubmitted
+                        ? 'bg-white border-emerald-300'
+                        : 'bg-amber-50/70 border-amber-300 ring-2 ring-amber-400/40'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="text-xs font-black text-[#007042] flex items-center gap-1.5">
+                        <span>⭐</span> <span>결과 만족도 & 부스 피드백 작성 (필수)</span>
+                      </div>
+                      {isFeedbackSubmitted && (
+                        <span className="text-[10px] bg-emerald-100 text-[#007042] border border-emerald-300 font-black px-2 py-0.5 rounded-full flex items-center gap-1">
+                          ✓ 제출 완료됨
+                        </span>
+                      )}
+                    </div>
+
+                    <div className="flex flex-col items-center justify-center p-2.5 bg-white/90 rounded-xl border border-emerald-200">
+                      <span className="text-[11px] font-bold text-[#1E3A2B] mb-1">
+                        {nickname || 'GUEST'}님, 분석 결과가 얼마나 비슷한가요?
+                      </span>
+                      <div className="flex items-center justify-center gap-2">
+                        {[1, 2, 3, 4, 5].map((star) => (
+                          <button
+                            key={star}
+                            type="button"
+                            disabled={isFeedbackSubmitted}
+                            onClick={() => setFeedbackRating(star)}
+                            className={`text-2xl transition-all ${
+                              feedbackRating >= star
+                                ? 'text-amber-400 scale-110'
+                                : 'text-stone-300 hover:text-amber-300'
+                            } ${isFeedbackSubmitted ? 'cursor-not-allowed opacity-80' : 'cursor-pointer'}`}
+                          >
+                            ★
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="space-y-1">
+                      <div className="flex items-center justify-between">
+                        <label className="block text-[11px] font-bold text-stone-700">
+                          한줄 피드백 작성 (필수) <span className="text-red-500 font-bold">*</span>
+                        </label>
+                        <span className="text-[10px] text-stone-400 font-mono">
+                          {feedbackComment.trim().length}/2자 이상
+                        </span>
+                      </div>
+                      <textarea
+                        rows={2}
+                        value={feedbackComment}
+                        disabled={isFeedbackSubmitted}
+                        onChange={(e) => setFeedbackComment(e.target.value)}
+                        placeholder="예: 결과가 매우 정확해요! 현직자 질문 카드가 유익했습니다. (최소 2자 이상)"
+                        className={`w-full p-2.5 rounded-lg border text-xs text-[#1E3A2B] focus:outline-none focus:ring-2 focus:ring-[#007042] disabled:bg-stone-100 disabled:text-stone-400 ${
+                          !isFeedbackSubmitted && feedbackComment.trim().length > 0 && feedbackComment.trim().length < 2
+                            ? 'border-red-400 bg-red-50/40'
+                            : 'border-emerald-200 bg-white'
+                        }`}
+                      />
+                      {!isFeedbackSubmitted && feedbackComment.trim().length > 0 && feedbackComment.trim().length < 2 && (
+                        <p className="text-[10px] text-red-500 font-semibold flex items-center gap-1">
+                          <span>⚠️</span> 피드백은 최소 2자 이상 입력해주세요!
+                        </p>
+                      )}
+                    </div>
+
+                    <button
+                      type="button"
+                      disabled={isFeedbackSubmitted || feedbackRating === 0 || feedbackComment.trim().length < 2}
+                      onClick={handleSubmitFeedback}
+                      className={`w-full py-3 px-4 rounded-xl text-xs font-bold transition-all shadow-xs flex items-center justify-center gap-1.5 ${
+                        isFeedbackSubmitted
+                          ? 'bg-stone-200 text-stone-500 cursor-not-allowed'
+                          : (feedbackRating > 0 && feedbackComment.trim().length >= 2)
+                          ? 'bg-[#007042] hover:bg-[#1E3A2B] text-white active:scale-[0.98] shadow-md'
+                          : 'bg-stone-200 text-stone-400 cursor-not-allowed'
+                      }`}
+                    >
+                      <span>
+                        {isFeedbackSubmitted
+                          ? '✅ 제출 완료 (영수증 확인 및 저장 해제됨)'
+                          : (feedbackRating > 0 && feedbackComment.trim().length >= 2)
+                          ? '영수증 확인 및 저장하러 가기 ➔'
+                          : '별점과 한줄 피드백 작성 시 영수증 해제'}
+                      </span>
+                    </button>
+                  </div>
+
+                  <div className="h-2" />
+                </div>
+
+                {/* 2. Sticky Action Buttons Footer Bar */}
+                <div className="p-3.5 sm:p-4 bg-white/95 backdrop-blur-md border-t border-emerald-200/80 shrink-0 space-y-2 shadow-lg z-20 sticky bottom-0">
+                  <div className="grid grid-cols-2 gap-2">
+                    <button
+                      onClick={handleSaveResult}
+                      disabled={isSavingCard}
+                      className={`py-3 px-3 rounded-xl text-xs font-bold shadow-md transition-all flex items-center justify-center gap-1.5 ${
+                        !isFeedbackSubmitted
+                          ? 'bg-stone-300 text-stone-600 cursor-pointer'
+                          : isSavingCard
+                          ? 'bg-[#007042] text-white opacity-80 cursor-wait'
+                          : 'bg-[#007042] hover:bg-[#1E3A2B] text-white active:scale-[0.98]'
+                      }`}
+                    >
+                      {isSavingCard ? (
+                        <>
+                          <span className="animate-spin">⏳</span>
+                          <span>영수증 생성 중...</span>
+                        </>
+                      ) : (
+                        <>
+                          <span>{isFeedbackSubmitted ? '📥' : '🔒'}</span>
+                          <span>{isFeedbackSubmitted ? '영수증 이미지 저장' : '피드백 작성후 저장'}</span>
+                        </>
+                      )}
+                    </button>
+
+                    <button
+                      onClick={handleOpenMissionModal}
+                      className={`py-3 px-3 rounded-xl text-xs font-bold shadow-md transition-all flex items-center justify-center gap-1.5 ${
+                        !isFeedbackSubmitted
+                          ? 'bg-stone-300 text-stone-600 cursor-pointer'
+                          : 'bg-emerald-700 hover:bg-emerald-800 text-white active:scale-[0.98]'
+                      }`}
+                    >
+                      <span>{isFeedbackSubmitted ? '🎟️' : '🔒'}</span>
+                      <span>{isFeedbackSubmitted ? '오늘의 미션 & 행운 부적' : '피드백 작성후 미션'}</span>
+                    </button>
+                  </div>
+
+                  <div className="flex gap-2">
+                    <button
+                      onClick={handleReset}
+                      className={`flex-1 py-2.5 px-4 rounded-xl text-xs font-bold border transition-all flex items-center justify-center gap-1.5 ${
+                        !isFeedbackSubmitted
+                          ? 'bg-stone-200 text-stone-400 border-stone-300 opacity-70 cursor-pointer'
+                          : 'bg-emerald-50/60 text-stone-700 border-emerald-200 hover:bg-emerald-100/60 active:scale-[0.98]'
+                      }`}
+                    >
+                      <span>{isFeedbackSubmitted ? '🔄' : '🔒'}</span>
+                      <span>{isFeedbackSubmitted ? '테스트 다시 하기' : '피드백 작성후 다시하기'}</span>
+                    </button>
+                    
+                    <button
+                      onClick={handleAdminClick}
+                      className="py-2.5 px-3 rounded-xl bg-stone-100 hover:bg-stone-200 text-stone-600 text-xs font-bold border border-stone-300 transition-all flex items-center justify-center"
+                      title="부스 관리자 현황"
+                    >
+                      <span>⚙️</span>
+                    </button>
+                  </div>
+                </div>
+
+                {/* Admin Password Authentication Modal */}
+                {showPasswordModal && (
+                  <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-xs flex items-center justify-center p-4">
+                    <div className="bg-white rounded-2xl p-6 w-full max-w-xs shadow-2xl border border-stone-300 space-y-4 text-center">
+                      <div className="flex items-center justify-between border-b pb-3">
+                        <h4 className="text-sm font-black text-[#007042] flex items-center gap-1.5">
+                          <span>🔒</span> <span>관리자 인증</span>
+                        </h4>
+                        <button
+                          onClick={() => setShowPasswordModal(false)}
+                          className="text-stone-400 hover:text-stone-600 text-sm font-bold"
+                        >
+                          ✕
+                        </button>
+                      </div>
+
+                      <div className="space-y-3 text-left">
+                        <p className="text-xs text-stone-600 font-medium leading-relaxed">
+                          현장 운영진 전용입니다. 비밀번호를 입력해 주세요.
+                        </p>
+                        
+                        <form onSubmit={handlePasswordSubmit} className="space-y-3 pt-1">
+                          <input
+                            type="password"
+                            value={adminPassword}
+                            onChange={(e) => {
+                              setAdminPassword(e.target.value);
+                              if (passwordError) setPasswordError('');
+                            }}
+                            placeholder="비밀번호 입력"
+                            autoFocus
+                            className="w-full p-3 rounded-xl border border-stone-300 text-sm font-mono text-center tracking-widest focus:outline-none focus:ring-2 focus:ring-[#007042]"
+                          />
+                          
+                          {passwordError && (
+                            <p className="text-[11px] text-red-500 font-bold text-center animate-pulse">
+                              {passwordError}
+                            </p>
+                          )}
+
+                          <button
+                            type="submit"
+                            className="w-full py-3 px-4 rounded-xl bg-[#007042] hover:bg-[#1E3A2B] text-white text-xs font-bold transition-all shadow-md active:scale-[0.98]"
+                          >
+                            인증 확인
+                          </button>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Today's Job Fair Mission & Lucky Charm Modal */}
+                {showMissionModal && (
+                  <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-xs flex items-center justify-center p-4">
+                    <div className="relative w-full max-w-sm max-h-[85vh] bg-[#FAF7F2] rounded-3xl shadow-2xl border-2 border-emerald-400 flex flex-col overflow-hidden text-left">
+                      
+                      {/* Fixed Header (shrink-0) */}
+                      <div className="p-4 bg-white border-b border-emerald-200 flex items-center justify-between shrink-0">
+                        <h4 className="text-sm font-black text-[#007042] flex items-center gap-1.5">
+                          <span>🍀</span> <span>{nickname || 'GUEST'}님의 커리어 행운 부적</span>
+                        </h4>
+                        <button
+                          onClick={() => setShowMissionModal(false)}
+                          className="text-stone-400 hover:text-stone-600 text-sm font-bold p-1 rounded-lg hover:bg-stone-100 transition-all"
+                        >
+                          ✕
+                        </button>
+                      </div>
+
+                      {/* Scrollable Body (Scrollbar strictly contained inside) */}
+                      <div className="flex-1 overflow-y-auto p-4 space-y-4 scrollbar-thin scrollbar-thumb-emerald-300">
+                        {/* Lucky Charm Card (Captured for Image Export with charmRef) */}
+                        <div
+                          ref={charmRef}
+                          className="bg-white p-4 rounded-2xl border-2 border-amber-300 shadow-lg text-center space-y-3 relative overflow-hidden"
+                        >
+                          <div className="inline-block px-3 py-1 rounded-full bg-amber-100 text-amber-900 text-xs font-black border border-amber-300 mb-1">
+                            ✨ CAREER LUCKY CHARM 2026
+                          </div>
+
+                          {/* Prominent 부적 Image Display */}
+                          <div className="w-44 h-56 mx-auto rounded-2xl overflow-hidden border-2 border-amber-400 shadow-md relative group bg-gradient-to-b from-amber-50 to-orange-50 flex items-center justify-center p-1">
+                            <img
+                              src="/images/부적.png"
+                              alt="커리어 행운의 부적"
+                              crossOrigin="anonymous"
+                              className="w-full h-full object-contain drop-shadow-md rounded-xl p-1"
+                              onError={(e) => {
+                                const target = e.currentTarget;
+                                if (!target.dataset.tried) {
+                                  target.dataset.tried = "1";
+                                  target.src = "/images/charm.png";
+                                } else if (target.dataset.tried === "1") {
+                                  target.dataset.tried = "2";
+                                  target.src = "/images/부적.jpg";
+                                } else if (target.dataset.tried === "2") {
+                                  target.dataset.tried = "3";
+                                  target.src = "/images/charm.jpg";
+                                } else if (target.dataset.tried === "3") {
+                                  target.dataset.tried = "4";
+                                  if (typeof window !== 'undefined' && window.CHARM_BASE64) {
+                                    target.src = window.CHARM_BASE64;
+                                  } else {
+                                    target.src = "charm.png";
+                                  }
+                                }
+                              }}
+                            />
+                          </div>
+
+                          <div>
+                            <h5 className="text-sm font-black text-stone-900 leading-snug">
+                              {nickname || 'GUEST'} 님의 [{resData.seatName || '커리어 지정석'}] 행운 부적
+                            </h5>
+                            <p className="text-xs font-bold text-[#007042] mt-1.5 px-2 leading-relaxed bg-emerald-50 py-2 rounded-xl border border-emerald-200">
+                              {resData.id === 'VISION' && "🌟 당신의 독창적인 비전과 창의적인 도전이 밝은 미래의 길을 엽니다!"}
+                              {resData.id === 'FOCUS' && "📚 당신의 탁월한 몰입과 세심한 완성도가 최고의 기회를 끌어당깁니다!"}
+                              {resData.id === 'ACTION' && "⚡ 당신의 막힘없는 스피드와 강한 실행력이 목표를 성공으로 이끕니다!"}
+                              {resData.id === 'CONNECT' && "🤝 당신의 따뜻한 소통과 연대의 힘이 더 큰 성장의 기회를 만듭니다!"}
+                            </p>
+                          </div>
+
+                          <div className="text-[10px] text-stone-400 font-mono border-t border-stone-200 pt-2">
+                            SEAT YOUR OPPORTUNITY • JA KOREA x JOB FAIR 2026
+                          </div>
+                        </div>
+
+                        {/* Job Fair Mission & Question Card */}
+                        <div className="space-y-2.5 text-xs">
+                          <div className="p-3 bg-emerald-50 rounded-xl border border-emerald-200">
+                            <span className="font-bold text-[#007042] block mb-1">
+                              🎯 1. 오늘의 잡페어 추천 미션
+                            </span>
+                            <p className="text-stone-800 font-medium">{resData.jobFairMission || '부스 현직자와 대화 나누기'}</p>
+                          </div>
+
+                          <div className="p-3 bg-white rounded-xl border border-stone-300">
+                            <span className="font-bold text-stone-900 block mb-1">
+                              💬 2. 현직자 멘토 추천 질문
+                            </span>
+                            <p className="text-stone-800 font-semibold">
+                              "{questionCardObj.question}"
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Fixed Footer (shrink-0) */}
+                      <div className="p-4 bg-white border-t border-emerald-200 shrink-0 space-y-2">
+                        <button
+                          onClick={handleSaveCharmImage}
+                          disabled={isSavingCharm}
+                          className="w-full py-3 px-4 rounded-xl bg-amber-500 hover:bg-amber-600 active:scale-[0.98] text-white text-xs font-bold shadow-md transition-all flex items-center justify-center gap-1.5"
+                        >
+                          {isSavingCharm ? (
+                            <>
+                              <span className="animate-spin">⏳</span>
+                              <span>부적 저장 중...</span>
+                            </>
+                          ) : (
+                            <>
+                              <span>🍀</span>
+                              <span>행운 부적 이미지 저장하기</span>
+                            </>
+                          )}
+                        </button>
+
+                        <button
+                          onClick={() => setShowMissionModal(false)}
+                          className="w-full py-2 rounded-xl bg-stone-200 hover:bg-stone-300 text-stone-700 text-xs font-bold transition-all"
+                        >
+                          확인 완료
+                        </button>
+                      </div>
+
+                    </div>
+                  </div>
+                )}
+
+                {/* Secret Booth Manager Admin Modal */}
+                {showAdminModal && (
+                  <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-xs flex items-center justify-center p-4">
+                    <div className="bg-white rounded-2xl p-5 w-full max-w-md shadow-2xl border border-emerald-400 space-y-4 text-left max-h-[85vh] flex flex-col">
+                      
+                      <div className="flex items-center justify-between border-b pb-3 shrink-0">
+                        <div className="flex items-center gap-2">
+                          <span className="text-lg">📊</span>
+                          <h4 className="text-sm font-black text-[#007042]">
+                            부스 관리자 피드백 Dashboard
+                          </h4>
+                        </div>
+                        <button
+                          onClick={() => setShowAdminModal(false)}
+                          className="text-stone-400 hover:text-stone-600 text-sm font-bold"
+                        >
+                          ✕
+                        </button>
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-2 shrink-0">
+                        <div className="p-3 bg-emerald-50 rounded-xl border border-emerald-200 text-center">
+                          <div className="text-[10px] text-stone-500 font-bold">총 제출 피드백</div>
+                          <div className="text-xl font-black text-[#007042]">{adminFeedbacks.length} 건</div>
+                        </div>
+                        <div className="p-3 bg-teal-50 rounded-xl border border-teal-200 text-center">
+                          <div className="text-[10px] text-stone-500 font-bold">평균 만족도 별점</div>
+                          <div className="text-xl font-black text-teal-800">★ {calcAvgRating()} / 5.0</div>
+                        </div>
+                      </div>
+
+                      <div className="p-2.5 bg-stone-50 rounded-xl border border-stone-200 shrink-0">
+                        <div className="text-[11px] font-bold text-stone-600 mb-1.5">결과 유형별 반응 수</div>
+                        <div className="grid grid-cols-4 gap-1 text-center text-[10px]">
+                          {Object.entries(calcTypeCounts()).map(([tKey, count]) => (
+                            <div key={tKey} className="p-1.5 rounded bg-white border border-stone-200 font-semibold">
+                              <span className="block text-stone-500">{tKey}</span>
+                              <span className="font-extrabold text-[#007042]">{count}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                      <div className="flex-1 min-h-0 overflow-y-auto border border-stone-200 rounded-xl p-2 space-y-2 bg-stone-50">
+                        <div className="text-[11px] font-bold text-stone-600 mb-1 px-1">최근 피드백 목록 ({adminFeedbacks.length})</div>
+                        {adminFeedbacks.length === 0 ? (
+                          <div className="text-center py-6 text-xs text-stone-400">수집된 피드백 데이터가 아직 없습니다.</div>
+                        ) : (
+                          adminFeedbacks.map((item) => (
+                            <div key={item.id} className="p-2.5 rounded-lg bg-white border border-stone-200 text-xs space-y-1 shadow-2xs">
+                              <div className="flex items-center justify-between">
+                                <span className="font-bold text-[#1E3A2B]">{item.nickname}</span>
+                                <span className="text-[10px] font-bold text-[#007042] bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200">
+                                  ★ {item.rating}점 | {item.result_type}
+                                </span>
+                              </div>
+                              {item.comment && (
+                                <p className="text-stone-700 font-medium text-[11px] bg-stone-50 p-1.5 rounded border border-stone-100">
+                                  "{item.comment}"
+                                </p>
+                              )}
+                              <div className="text-[9px] text-stone-400 text-right">
+                                {new Date(item.created_at).toLocaleString()}
+                              </div>
+                            </div>
+                          ))
+                        )}
+                      </div>
+
+                      <div className="flex gap-2 shrink-0 pt-2 border-t border-stone-200">
+                        <button
+                          onClick={() => exportFeedbacksToCSV(adminFeedbacks)}
+                          disabled={adminFeedbacks.length === 0}
+                          className="flex-1 py-2.5 px-3 rounded-xl bg-[#007042] hover:bg-[#1E3A2B] text-white text-xs font-bold disabled:bg-stone-200 disabled:text-stone-400 transition-all flex items-center justify-center gap-1"
+                        >
+                          <span>📥 CSV 다운로드</span>
+                        </button>
+                        <button
+                          onClick={() => {
+                            if (window.confirm('정말로 수집된 피드백 데이터를 초기화하시겠습니까?')) {
+                              clearFeedbacks();
+                              setAdminFeedbacks([]);
+                              triggerToast('🗑️ 피드백 데이터가 초기화되었습니다.');
+                            }
+                          }}
+                          className="py-2.5 px-3 rounded-xl bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 text-xs font-bold transition-all"
+                        >
+                          초기화
+                        </button>
+                      </div>
+
+                    </div>
+                  </div>
+                )}
+
+              </div>
+            )}
+
+          </div>
+        </div>
+      );
+    }
+
+    class ErrorBoundary extends React.Component {
+      constructor(props) {
+        super(props);
+        this.state = { hasError: false, error: null };
+      }
+
+      static getDerivedStateFromError(error) {
+        return { hasError: true, error };
+      }
+
+      componentDidCatch(error, errorInfo) {
+        console.error("React Error Boundary caught an error:", error, errorInfo);
+      }
+
+      render() {
+        if (this.state.hasError) {
+          return (
+            <div className="min-h-screen flex items-center justify-center p-4 bg-[#FAF7F2]">
+              <div className="bg-white p-6 rounded-2xl shadow-xl border border-stone-300 max-w-sm text-center space-y-3">
+                <div className="text-3xl">☕</div>
+                <h2 className="text-base font-black text-stone-900">Seat Your Opportunity</h2>
+                <p className="text-xs text-stone-600">
+                  화면 표시 중 일시적인 오류가 발생했습니다. 아래 버튼을 눌러 테스트를 다시 시작해 주세요.
+                </p>
+                <button
+                  onClick={() => {
+                    this.setState({ hasError: false });
+                    window.location.reload();
+                  }}
+                  className="w-full py-2.5 px-4 rounded-xl bg-[#007042] text-white text-xs font-bold shadow-md hover:bg-[#1E3A2B] transition-all"
+                >
+                  🔄 테스트 다시 시작하기
+                </button>
+              </div>
+            </div>
+          );
+        }
+        return this.props.children;
+      }
+    }
+
+    const rootElement = document.getElementById('root');
+    const root = ReactDOM.createRoot(rootElement);
+    root.render(
+      <ErrorBoundary>
+        <CareerCafeApp />
+      </ErrorBoundary>
+    );
+  </script>
+</body>
+</html>
